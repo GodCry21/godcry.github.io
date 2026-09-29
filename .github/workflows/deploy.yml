@@ -3,7 +3,7 @@ name: Deploy wedding web
 on:
   push:
     branches:
-      - main
+      - source
 
 permissions:
   contents: read
