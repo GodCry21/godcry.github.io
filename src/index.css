@@ -1,0 +1,544 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@plugin "@tailwindcss/typography";
+
+@custom-variant dark (&:is(.dark *));
+
+@layer base {
+  .standard-link {
+    /* Základní barva z text-chart-3 */
+    @apply text-chart-3 font-medium transition-colors duration-300;
+  }
+
+  .standard-link:hover {
+    /* Barva při najetí myší z hover:text-primary */
+    @apply text-primary;
+  }
+  .maplibregl-popup-content {
+    @apply bg-transparent! shadow-none! p-0! rounded-none!;
+  }
+  .maplibregl-popup-tip {
+    @apply hidden!;
+  }
+}
+
+
+
+
+@theme {
+  /* Zde definuješ fonty jako CSS proměnné */
+  --font-together-pismena: "Together-pismena", serif;
+  --font-together-znaky: "Together-znaky", serif;
+
+  /* Mix obou fontů - nejdřív zkusí znaky, pak písmena */
+  --font-together: "Together-znaky", "Together-pismena", serif;
+}
+
+@font-face {
+    font-family: 'Together-pismena';
+    src: url('/fonts/Together_canva-Regular.woff2') format('woff2'), /* Moderní formát */
+         url('/fonts/Together_canva-Regular.ttf') format('truetype'); /* Starší formát */
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Together-znaky';
+    src: url('/fonts/Together_znaky_canva-Regular.woff2') format('woff2'), /* Moderní formát */
+         url('/fonts/Together_znaky_canva-Regular.ttf') format('truetype'); /* Starší formát */
+    font-weight: normal;
+    font-style: normal;
+}
+
+@theme {
+  /* Zde definuješ fonty jako CSS proměnné */
+  --font-tanvivre-libre-pismena: "TANVivre-libre-pismena", serif;
+  --font-tanvivre-libre-znaky: "TANVivre-libre-znaky", serif;
+  --font-tanvivre-libre-velke: "TANVivre-libre-velke", serif;
+
+  /* Mix obou fontů - nejdřív zkusí znaky, pak písmena */
+  --font-tanvivre-libre: "TANVivre-libre-znaky", "TANVivre-libre-velke", "TANVivre-libre-pismena", serif;
+}
+
+@font-face {
+    font-family: 'TANVivre-libre-pismena';
+    src: url('/fonts/TanVivreLibre-Regular.woff2') format('woff2'), /* Moderní formát */
+         url('/fonts/TanVivreLibre-Regular.ttf') format('truetype'); /* Starší formát */
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'TANVivre-libre-znaky';
+    src: url('/fonts/TanVivreLibre_znaky-Regular.woff2') format('woff2'), /* Moderní formát */
+         url('/fonts/TanVivreLibre_znaky-Regular.ttf') format('truetype'); /* Starší formát */
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'TANVivre-libre-velke';
+    src: url('/fonts/TanVivreLibre_velke-Regular.woff2') format('woff2'), /* Moderní formát */
+         url('/fonts/TanVivreLibre_velke-Regular.ttf') format('truetype'); /* Starší formát */
+    font-weight: normal;
+    font-style: normal;
+}
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+@theme inline {
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-card-border: hsl(var(--card-border));
+
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-popover-border: hsl(var(--popover-border));
+
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-primary-border: var(--primary-border);
+
+  --color-navigation: hsl(var(--navigation));
+  --color-navigation-foreground: hsl(var(--navigation));
+  --color-navigation-border: var(--navigation);
+
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-secondary-border: var(--secondary-border);
+
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-muted-border: var(--muted-border);
+
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-accent-border: var(--accent-border);
+
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-destructive-border: var(--destructive-border);
+
+  --color-chart-1: hsl(var(--chart-1));
+  --color-chart-2: hsl(var(--chart-2));
+  --color-chart-3: hsl(var(--chart-3));
+  --color-chart-4: hsl(var(--chart-4));
+  --color-chart-5: hsl(var(--chart-5));
+
+  --color-sidebar: hsl(var(--sidebar));
+  --color-sidebar-foreground: hsl(var(--sidebar-foreground));
+  --color-sidebar-border: hsl(var(--sidebar-border));
+  --color-sidebar-primary: hsl(var(--sidebar-primary));
+  --color-sidebar-primary-foreground: hsl(var(--sidebar-primary-foreground));
+  --color-sidebar-primary-border: var(--sidebar-primary-border);
+  --color-sidebar-accent: hsl(var(--sidebar-accent));
+  --color-sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));
+  --color-sidebar-accent-border: var(--sidebar-accent-border);
+  --color-sidebar-ring: hsl(var(--sidebar-ring));
+
+  --font-sans: var(--app-font-sans);
+  --font-serif: var(--app-font-serif);
+  --font-mono: var(--app-font-mono);
+  --font-script: var(--app-font-script);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+/* LIGHT MODE */
+:root {
+  --button-outline: rgba(0,0,0, .10);
+  --badge-outline: rgba(0,0,0, .05);
+
+  /* Automatic computation of border around primary / danger buttons */
+  --opaque-button-border-intensity: -8; /* In terms of percentages */
+
+  /* Backgrounds applied on top of other backgrounds when hovered/active */
+  --elevate-1: rgba(0,0,0, .03);
+  --elevate-2: rgba(0,0,0, .08);
+
+  /* Brand palette
+     #a6b8a3 sage         → 109 13% 68%   (primary brand, used at slightly darker 50% for text)
+     #f7b673 warm peach   → 30 89% 71%    (accent / ring)
+     #c18a8a dusty pink   → 0 31% 65%
+     #ffcac1 light blush  → 9 100% 88%
+     #fff9b7 cream yellow → 55 100% 86%
+     #99e2ff light blue   → 197 100% 80%
+  */
+  --background: 50 60% 98%; /* warm cream */
+  --foreground: 110 20% 14%; /* deep sage-ink */
+  --border: 30 30% 88%;
+  --card: 50 60% 98%;
+  --card-foreground: 110 20% 14%;
+  --card-border: 30 30% 88%;
+  --sidebar: 50 60% 98%;
+  --sidebar-foreground: 110 20% 14%;
+  --sidebar-border: 30 30% 88%;
+  --sidebar-primary: 109 14% 48%;
+  --sidebar-primary-foreground: 50 60% 98%;
+  --sidebar-accent: 30 80% 92%;
+  --sidebar-accent-foreground: 110 20% 14%;
+  --sidebar-ring: 30 89% 65%;
+  --popover: 50 60% 98%;
+  --popover-foreground: 110 20% 14%;
+  --popover-border: 30 30% 88%;
+  --primary: 109 14% 48%; /* sage (darker for text legibility) */
+  --primary-foreground: 50 60% 98%;
+  --secondary: 30 80% 92%; /* very light peach */
+  --secondary-foreground: 110 20% 14%;
+  --muted: 50 30% 94%;
+  --muted-foreground: 110 8% 38%;
+  --accent: 30 89% 65%; /* warm peach */
+  --accent-foreground: 110 20% 14%;
+  --destructive: 0 50% 50%;
+  --destructive-foreground: 50 60% 98%;
+  --input: 30 30% 88%;
+  --ring: 30 89% 65%; /* peach */
+  --chart-1: 109 14% 48%;
+  --chart-2: 30 89% 65%;
+  --chart-3: 0 31% 65%;
+  --chart-4: 197 100% 70%;
+  --chart-5: 55 90% 70%;
+  --navigation: 109, 15%, 65%;
+
+
+  --app-font-sans: 'DM Sans', sans-serif;
+  --app-font-serif: 'Libre Baskerville', serif;
+  --app-font-script: 'Sacramento', cursive;
+  --app-font-mono: Menlo, monospace;
+
+  --radius: .5rem; /* 8px */
+  --shadow-2xs: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00); /*replace with H S L */
+  --shadow-xs: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00); /*replace with H S L */
+  --shadow-sm: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00), 0px 1px 2px -1px hsl(202.8169 89.1213% 53.1373% / 0.00);
+  --shadow: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00), 0px 1px 2px -1px hsl(202.8169 89.1213% 53.1373% / 0.00);
+  --shadow-md: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00), 0px 2px 4px -1px hsl(202.8169 89.1213% 53.1373% / 0.00);
+  --shadow-lg: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00), 0px 4px 6px -1px hsl(202.8169 89.1213% 53.1373% / 0.00);
+  --shadow-xl: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00), 0px 8px 10px -1px hsl(202.8169 89.1213% 53.1373% / 0.00);
+  --shadow-2xl: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00);
+  --tracking-normal: 0em;
+  --spacing: 0.25rem;
+
+  /* Automatically computed borders - intensity can be controlled by the user by the --opaque-button-border-intensity setting */
+
+  /* Fallback for older browsers */
+  --sidebar-primary-border: hsl(var(--sidebar-primary));
+  --sidebar-primary-border: hsl(from hsl(var(--sidebar-primary)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+
+  /* Fallback for older browsers */
+  --sidebar-accent-border: hsl(var(--sidebar-accent));
+  --sidebar-accent-border: hsl(from hsl(var(--sidebar-accent)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+
+  /* Fallback for older browsers */
+  --primary-border: hsl(var(--primary));
+  --primary-border: hsl(from hsl(var(--primary)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+
+  /* Fallback for older browsers */
+  --secondary-border: hsl(var(--secondary));
+  --secondary-border: hsl(from hsl(var(--secondary)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+
+  /* Fallback for older browsers */
+  --muted-border: hsl(var(--muted));
+  --muted-border: hsl(from hsl(var(--muted)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+
+  /* Fallback for older browsers */
+  --accent-border: hsl(var(--accent));
+  --accent-border: hsl(from hsl(var(--accent)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+
+  /* Fallback for older browsers */
+  --destructive-border: hsl(var(--destructive));
+  --destructive-border: hsl(from hsl(var(--destructive)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+}
+
+.dark {
+  --button-outline: rgba(255,255,255, .10);
+  --badge-outline: rgba(255,255,255, .05);
+
+  --opaque-button-border-intensity: 9;  /* In terms of percentages */
+
+  /* Backgrounds applied on top of other backgrounds when hovered/active */
+  --elevate-1: rgba(255,255,255, .04);
+  --elevate-2: rgba(255,255,255, .09);
+
+  --background: 50 60% 98%;
+  --foreground: 110 20% 14%;
+  --border: 30 30% 88%;
+  --card: 50 60% 98%;
+  --card-foreground: 110 20% 14%;
+  --card-border: 30 30% 88%;
+  --sidebar: 50 60% 98%;
+  --sidebar-foreground: 110 20% 14%;
+  --sidebar-border: 30 30% 88%;
+  --sidebar-primary: 109 14% 48%;
+  --sidebar-primary-foreground: 50 60% 98%;
+  --sidebar-accent: 30 80% 92%;
+  --sidebar-accent-foreground: 110 20% 14%;
+  --sidebar-ring: 30 89% 65%;
+  --popover: 50 60% 98%;
+  --popover-foreground: 110 20% 14%;
+  --popover-border: 30 30% 88%;
+  --primary: 109 14% 48%;
+  --primary-foreground: 50 60% 98%;
+  --secondary: 30 80% 92%;
+  --secondary-foreground: 110 20% 14%;
+  --muted: 50 30% 94%;
+  --muted-foreground: 110 8% 38%;
+  --accent: 30 89% 65%;
+  --accent-foreground: 110 20% 14%;
+  --destructive: 0 50% 50%;
+  --destructive-foreground: 50 60% 98%;
+  --input: 30 30% 88%;
+  --ring: 30 89% 65%;
+  --chart-1: 109 14% 48%;
+  --chart-2: 30 89% 65%;
+  --chart-3: 0 31% 65%;
+  --chart-4: 197 100% 70%;
+  --chart-5: 55 90% 70%;
+
+  --shadow-2xs: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00);
+  --shadow-xs: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00);
+  --shadow-sm: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00), 0px 1px 2px -1px hsl(202.8169 89.1213% 53.1373% / 0.00);
+  --shadow: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00), 0px 1px 2px -1px hsl(202.8169 89.1213% 53.1373% / 0.00);
+  --shadow-md: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00), 0px 2px 4px -1px hsl(202.8169 89.1213% 53.1373% / 0.00);
+  --shadow-lg: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00), 0px 4px 6px -1px hsl(202.8169 89.1213% 53.1373% / 0.00);
+  --shadow-xl: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00), 0px 8px 10px -1px hsl(202.8169 89.1213% 53.1373% / 0.00);
+  --shadow-2xl: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00);
+
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+  }
+}
+
+/**
+ * Using the elevate system.
+ * Automatic contrast adjustment.
+ *
+ * <element className="hover-elevate" />
+ * <element className="active-elevate-2" />
+ *
+ * // Using the tailwind utility when a data attribute is "on"
+ * <element className="toggle-elevate data-[state=on]:toggle-elevated" />
+ * // Or manually controlling the toggle state
+ * <element className="toggle-elevate toggle-elevated" />
+ *
+ * Elevation systems have to handle many states.
+ * - not-hovered, vs. hovered vs. active  (three mutually exclusive states)
+ * - toggled or not
+ * - focused or not (this is not handled with these utilities)
+ *
+ * Even without handling focused or not, this is six possible combinations that
+ * need to be distinguished from eachother visually.
+ */
+@layer utilities {
+
+  /* Hide ugly search cancel button in Chrome until we can style it properly */
+  input[type="search"]::-webkit-search-cancel-button {
+    @apply hidden;
+  }
+
+  /* Placeholder styling for contentEditable div */
+  [contenteditable][data-placeholder]:empty::before {
+    content: attr(data-placeholder);
+    color: hsl(var(--muted-foreground));
+    pointer-events: none;
+  }
+
+  /* .no-default-hover-elevate/no-default-active-elevate is an escape hatch so consumers of
+   * buttons/badges can remove the automatic brightness adjustment on interactions
+   * and program their own. */
+  .no-default-hover-elevate {}
+
+  .no-default-active-elevate {}
+
+  /**
+   * Toggleable backgrounds go behind the content. Hoverable/active goes on top.
+   * This way they can stack/compound. Both will overlap the parent's borders!
+   * So borders will be automatically adjusted both on toggle, and hover/active,
+   * and they will be compounded.
+   */
+  .toggle-elevate::before,
+  .toggle-elevate-2::before {
+    content: "";
+    pointer-events: none;
+    position: absolute;
+    inset: 0px;
+    /*border-radius: inherit;   match rounded corners */
+    border-radius: inherit;
+    z-index: -1;
+    /* sits behind content but above backdrop */
+  }
+
+  .toggle-elevate.toggle-elevated::before {
+    background-color: var(--elevate-2);
+  }
+
+  /* If there's a 1px border, adjust the inset so that it covers that parent's border */
+  .border.toggle-elevate::before {
+    inset: -1px;
+  }
+
+  /* Does not work on elements with overflow:hidden! */
+  .hover-elevate:not(.no-default-hover-elevate),
+  .active-elevate:not(.no-default-active-elevate),
+  .hover-elevate-2:not(.no-default-hover-elevate),
+  .active-elevate-2:not(.no-default-active-elevate) {
+    position: relative;
+    z-index: 0;
+  }
+
+  .hover-elevate:not(.no-default-hover-elevate)::after,
+  .active-elevate:not(.no-default-active-elevate)::after,
+  .hover-elevate-2:not(.no-default-hover-elevate)::after,
+  .active-elevate-2:not(.no-default-active-elevate)::after {
+    content: "";
+    pointer-events: none;
+    position: absolute;
+    inset: 0px;
+    /*border-radius: inherit;   match rounded corners */
+    border-radius: inherit;
+    z-index: 999;
+    /* sits in front of content */
+  }
+
+  .hover-elevate:hover:not(.no-default-hover-elevate)::after,
+  .active-elevate:active:not(.no-default-active-elevate)::after {
+    background-color: var(--elevate-1);
+  }
+
+  .hover-elevate-2:hover:not(.no-default-hover-elevate)::after,
+  .active-elevate-2:active:not(.no-default-active-elevate)::after {
+    background-color: var(--elevate-2);
+  }
+
+  /* If there's a 1px border, adjust the inset so that it covers that parent's border */
+  .border.hover-elevate:not(.no-hover-interaction-elevate)::after,
+  .border.active-elevate:not(.no-active-interaction-elevate)::after,
+  .border.hover-elevate-2:not(.no-hover-interaction-elevate)::after,
+  .border.active-elevate-2:not(.no-active-interaction-elevate)::after,
+  .border.hover-elevate:not(.no-hover-interaction-elevate)::after {
+    inset: -1px;
+  }
+}
+
+.maplibregl-ctrl-attrib{
+  display:none;
+}
+
+
+/* ==========================================================================
+   SVATEBNÍ FOTOGALERIE – INTEGRACE DO DESIGN SYSTÉMU (ČÁST 1/3)
+   ========================================================================== */
+
+@layer components {
+  .gallery-container {
+    @apply max-w-7xl mx-auto px-4 py-8;
+  }
+
+  .gallery-header {
+    @apply text-center mb-12 flex flex-col items-center;
+  }
+
+  .gallery-header h1 {
+    @apply font-serif text-4xl md:text-5xl text-primary tracking-wide mb-3;
+  }
+
+  .gallery-subtitle {
+    @apply italic text-muted-foreground font-serif tracking-normal mb-8;
+  }
+
+  .empty-gallery {
+    @apply text-center text-muted-foreground italic font-serif mt-16 text-lg;
+  }
+}
+
+/* ==========================================================================
+   SVATEBNÍ FOTOGALERIE – INTEGRACE DO DESIGN SYSTÉMU (ČÁST 2/3)
+   ========================================================================== */
+
+@layer components {
+  .upload-section {
+    @apply flex flex-col items-center gap-4;
+  }
+
+  .hidden-input {
+    @apply hidden;
+  }
+
+  .upload-btn {
+    @apply inline-block px-8 py-3 bg-primary text-primary-foreground font-sans text-sm font-semibold tracking-wider uppercase rounded-md cursor-pointer transition-all duration-300 shadow-sm hover:bg-primary/90 hover:-translate-y-0.5 active:translate-y-0;
+  }
+
+  .upload-btn.disabled {
+    @apply bg-muted text-muted-foreground cursor-not-allowed transform-none shadow-none;
+  }
+
+  .progress-text {
+    @apply font-sans text-xs font-semibold text-primary tracking-wide mt-2;
+  }
+
+  .spinner-container {
+    @apply flex justify-center items-center my-12;
+  }
+
+  .loading-spinner {
+    @apply w-10 h-10 border-4 border-muted border-t-primary rounded-full;
+    animation: wedding-spin 1s linear infinite;
+  }
+}
+
+@keyframes wedding-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ==========================================================================
+   SVATEBNÍ FOTOGALERIE – INTEGRACE DO DESIGN SYSTÉMU (ČÁST 3/3)
+   ========================================================================== */
+
+@layer components {
+  
+    /* RESPONSIVNÍ MŘÍŽKA - OPRAVENÁ PRO 3 SLOUPCE NA MOBILU */
+  .gallery-grid {
+    @apply grid grid-cols-3 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-4 md:gap-6 py-4;
+  }
+
+
+  .gallery-item {
+    @apply bg-card rounded-lg overflow-hidden border border-border/60 shadow-sm transition-all duration-300 aspect-square hover:shadow-md hover:-translate-y-1;
+  }
+
+  .gallery-image {
+    @apply w-100 h-100 object-cover block transition-opacity duration-300;
+  }
+}
+
+
+@keyframes shimmerDiagonal {
+  0% {
+    transform: translate(-50%, -50%);
+  }
+
+  100% {
+    transform: translate(50%, 50%);
+  }
+}
