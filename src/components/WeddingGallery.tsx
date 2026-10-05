@@ -9,15 +9,17 @@ const FULL_MAX_SIZE = 2560;
 const FULL_JPEG_QUALITY = 0.88;
 
 const THUMB_MAX_SIZE = 400;
-const THUMB_JPEG_QUALITY = 0.60;
+const THUMB_JPEG_QUALITY = 0.6;
 
 const MAX_INPUT_FILE_SIZE = 40 * 1024 * 1024;
 
 // public/images/wedding-photographer/manifest.json
-const PHOTOGRAPHER_MANIFEST_URL =
-  "/images/wedding-photographer/manifest.json";
+const PHOTOGRAPHER_MANIFEST_URL = "/images/wedding-photographer/manifest.json";
 
-type GalleryTab = "photographer" | "guests" | "upload";
+const PHOTOGRAPHER_MANIFEST_URL2 =
+  "/images/wedding-photographer2/manifest.json";
+
+type GalleryTab = "photographer" | "photographer2" | "guests" | "upload";
 
 interface GuestImageItem {
   id: string;
@@ -69,6 +71,13 @@ export const WeddingGallery: React.FC = () => {
   const [photographerLoading, setPhotographerLoading] = useState(true);
   const [photographerError, setPhotographerError] = useState("");
 
+  const [photographerImages2, setPhotographerImages2] = useState<
+    PhotographerImageItem[]
+  >([]);
+
+  const [photographerLoading2, setPhotographerLoading2] = useState(true);
+  const [photographerError2, setPhotographerError2] = useState("");
+
   const [guestImages, setGuestImages] = useState<GuestImageItem[]>([]);
   const [guestLoading, setGuestLoading] = useState(false);
   const [guestGalleryLoaded, setGuestGalleryLoaded] = useState(false);
@@ -108,15 +117,43 @@ export const WeddingGallery: React.FC = () => {
         setPhotographerImages(data);
       } catch (error) {
         console.error("Chyba při načítání fotek fotografa:", error);
-        setPhotographerError(
-          "Fotky od fotografa se nepodařilo načíst."
-        );
+        setPhotographerError("Fotky od fotografa se nepodařilo načíst.");
       } finally {
         setPhotographerLoading(false);
       }
     };
 
+    const loadPhotographerGallery2 = async () => {
+      setPhotographerLoading2(true);
+      setPhotographerError2("");
+
+      try {
+        const response = await fetch(PHOTOGRAPHER_MANIFEST_URL2);
+
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+
+        const data = (await response.json()) as PhotographerImageItem[];
+
+        if (!Array.isArray(data)) {
+          throw new Error("Manifest druhého fotografa nemá správný formát.");
+        }
+
+        setPhotographerImages2(data);
+      } catch (error) {
+        console.error("Chyba při načítání fotek druhého fotografa:", error);
+
+        setPhotographerError2(
+          "Fotky od druhého fotografa se nepodařilo načíst.",
+        );
+      } finally {
+        setPhotographerLoading2(false);
+      }
+    };
+
     void loadPhotographerGallery();
+    void loadPhotographerGallery2();
   }, []);
 
   useEffect(() => {
@@ -169,7 +206,10 @@ export const WeddingGallery: React.FC = () => {
     new Promise<void>((resolve) => window.setTimeout(resolve, ms));
 
   const createUploadId = () => {
-    if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+    if (
+      typeof crypto !== "undefined" &&
+      typeof crypto.randomUUID === "function"
+    ) {
       return crypto.randomUUID();
     }
 
@@ -179,7 +219,7 @@ export const WeddingGallery: React.FC = () => {
   const calculateSize = (
     width: number,
     height: number,
-    maxSize: number
+    maxSize: number,
   ): { width: number; height: number } => {
     if (width <= maxSize && height <= maxSize) {
       return { width, height };
@@ -212,8 +252,8 @@ export const WeddingGallery: React.FC = () => {
           reject(
             new Error(
               `Fotografii ${file.name} prohlížeč neumí dekódovat. ` +
-                `Zkuste ji uložit jako JPEG.`
-            )
+                `Zkuste ji uložit jako JPEG.`,
+            ),
           );
 
         img.onload = () => {
@@ -228,7 +268,7 @@ export const WeddingGallery: React.FC = () => {
             const fullSize = calculateSize(
               sourceWidth,
               sourceHeight,
-              FULL_MAX_SIZE
+              FULL_MAX_SIZE,
             );
 
             const fullCanvas = document.createElement("canvas");
@@ -242,13 +282,13 @@ export const WeddingGallery: React.FC = () => {
 
             const fullBase64 = fullCanvas.toDataURL(
               "image/jpeg",
-              FULL_JPEG_QUALITY
+              FULL_JPEG_QUALITY,
             );
 
             const thumbSize = calculateSize(
               sourceWidth,
               sourceHeight,
-              THUMB_MAX_SIZE
+              THUMB_MAX_SIZE,
             );
 
             const thumbCanvas = document.createElement("canvas");
@@ -262,7 +302,7 @@ export const WeddingGallery: React.FC = () => {
 
             const thumbBase64 = thumbCanvas.toDataURL(
               "image/jpeg",
-              THUMB_JPEG_QUALITY
+              THUMB_JPEG_QUALITY,
             );
 
             img.src = "";
@@ -287,7 +327,7 @@ export const WeddingGallery: React.FC = () => {
 
   const postToGas = async (
     payload: object,
-    retryCount = 0
+    retryCount = 0,
   ): Promise<UploadResponse> => {
     let lastError: Error | null = null;
 
@@ -313,8 +353,7 @@ export const WeddingGallery: React.FC = () => {
 
         return result;
       } catch (error) {
-        lastError =
-          error instanceof Error ? error : new Error(String(error));
+        lastError = error instanceof Error ? error : new Error(String(error));
 
         if (attempt < retryCount) {
           await sleep(700 * (attempt + 1));
@@ -376,9 +415,7 @@ export const WeddingGallery: React.FC = () => {
     }
   };
 
-  const handleFileChange = async (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = Array.from(e.target.files || []);
 
     if (selectedFiles.length === 0) return;
@@ -402,8 +439,8 @@ export const WeddingGallery: React.FC = () => {
           if (file.size > MAX_INPUT_FILE_SIZE) {
             throw new Error(
               `Soubor je větší než ${Math.round(
-                MAX_INPUT_FILE_SIZE / 1024 / 1024
-              )} MB.`
+                MAX_INPUT_FILE_SIZE / 1024 / 1024,
+              )} MB.`,
             );
           }
 
@@ -428,7 +465,7 @@ export const WeddingGallery: React.FC = () => {
               fullBase64: prepared.fullBase64,
               thumbBase64: prepared.thumbBase64,
             },
-            1
+            1,
           );
         } catch (error) {
           console.error(`Chyba při uploadu ${file.name}:`, error);
@@ -446,8 +483,8 @@ export const WeddingGallery: React.FC = () => {
       if (failedFiles.length > 0) {
         setUploadError(
           `Nepodařilo se nahrát ${failedFiles.length} z ${selectedFiles.length} fotografií: ${failedFiles.join(
-            ", "
-          )}`
+            ", ",
+          )}`,
         );
       } else {
         setActiveTab("guests");
@@ -461,22 +498,41 @@ export const WeddingGallery: React.FC = () => {
     const id = image.thumbnailId || image.id;
 
     return `https://drive.google.com/thumbnail?id=${encodeURIComponent(
-      id
+      id,
     )}&sz=w600`;
   };
 
   const guestFullSrc = (image: GuestImageItem) =>
     `https://drive.google.com/thumbnail?id=${encodeURIComponent(
-      image.id
+      image.id,
     )}&sz=w2200`;
+
+  const getDownloadFilename = (name: string) => {
+    const cleanName = name?.trim() || "svatebni-fotografie";
+
+    return /\.(jpg|jpeg|png|webp)$/i.test(cleanName)
+      ? cleanName
+      : `${cleanName}.jpg`;
+  };
 
   const openPhotographerLightbox = (index: number) => {
     setLightboxImages(
       photographerImages.map((image) => ({
         name: image.name,
         src: image.full,
-      }))
+      })),
     );
+    setActiveImageIndex(index);
+  };
+
+  const openPhotographerLightbox2 = (index: number) => {
+    setLightboxImages(
+      photographerImages2.map((image) => ({
+        name: image.name,
+        src: image.full,
+      })),
+    );
+
     setActiveImageIndex(index);
   };
 
@@ -485,7 +541,7 @@ export const WeddingGallery: React.FC = () => {
       guestImages.map((image) => ({
         name: image.name,
         src: guestFullSrc(image),
-      }))
+      })),
     );
     setActiveImageIndex(index);
   };
@@ -525,7 +581,7 @@ export const WeddingGallery: React.FC = () => {
           Fotky od fotografa i momentky od našich hostů na jednom místě
         </p>
 
-        <div className="mx-auto mt-6 grid w-full max-w-3xl grid-cols-1 gap-3 sm:grid-cols-3">
+        <div className="mx-auto mt-6 grid w-full max-w-5xl grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
           <button
             type="button"
             onClick={() => setActiveTab("photographer")}
@@ -538,6 +594,22 @@ export const WeddingGallery: React.FC = () => {
             <span className="block font-semibold">Od fotografa</span>
             <span className="mt-1 block text-xs opacity-80">
               Profesionální svatební fotografie
+            </span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveTab("photographer2")}
+            className={`rounded-xl border px-5 py-4 text-left transition ${
+              activeTab === "photographer2"
+                ? "bg-primary text-primary-foreground shadow-md"
+                : "bg-background hover:bg-muted"
+            }`}
+          >
+            <span className="block font-semibold">Od druhého fotografa</span>
+
+            <span className="mt-1 block text-xs opacity-80">
+              Další svatební fotografie
             </span>
           </button>
 
@@ -608,6 +680,61 @@ export const WeddingGallery: React.FC = () => {
                   key={`${image.full}-${index}`}
                   className="gallery-item relative overflow-hidden cursor-pointer aspect-square rounded-lg border bg-muted"
                   onClick={() => openPhotographerLightbox(index)}
+                  aria-label={`Otevřít fotografii ${image.name}`}
+                >
+                  <img
+                    src={image.thumb}
+                    alt={image.name}
+                    loading={index < 8 ? "eager" : "lazy"}
+                    decoding="async"
+                    fetchPriority={index < 4 ? "high" : "auto"}
+                    className="w-full h-full object-cover block transition-transform duration-300 hover:scale-[1.02]"
+                  />
+                </button>
+              ))}
+            </main>
+          )}
+        </section>
+      )}
+
+      {activeTab === "photographer2" && (
+        <section>
+          <div className="mb-6 text-center">
+            <h2 className="text-2xl font-semibold">
+              Fotky od druhého fotografa
+            </h2>
+
+            <p className="mt-1 text-sm text-muted-foreground">
+              Další fotografie z našeho dne
+            </p>
+          </div>
+
+          {photographerLoading2 && (
+            <main className="gallery-grid">{renderSkeletons(12)}</main>
+          )}
+
+          {!photographerLoading2 && photographerError2 && (
+            <p className="py-10 text-center text-sm text-red-600">
+              {photographerError2}
+            </p>
+          )}
+
+          {!photographerLoading2 &&
+            !photographerError2 &&
+            photographerImages2.length === 0 && (
+              <p className="py-10 text-center text-sm text-muted-foreground">
+                Fotky od druhého fotografa zde brzy přibudou.
+              </p>
+            )}
+
+          {!photographerLoading2 && photographerImages2.length > 0 && (
+            <main className="gallery-grid">
+              {photographerImages2.map((image, index) => (
+                <button
+                  type="button"
+                  key={`${image.full}-${index}`}
+                  className="gallery-item relative overflow-hidden cursor-pointer aspect-square rounded-lg border bg-muted"
+                  onClick={() => openPhotographerLightbox2(index)}
                   aria-label={`Otevřít fotografii ${image.name}`}
                 >
                   <img
@@ -789,6 +916,20 @@ export const WeddingGallery: React.FC = () => {
               decoding="async"
             />
           </div>
+
+          <a
+            href={lightboxImages[activeImageIndex].src}
+            download={getDownloadFilename(
+              lightboxImages[activeImageIndex].name,
+            )}
+            className="fixed top-3 right-20 h-12 px-4 flex items-center justify-center rounded-full bg-black/70 text-white text-sm font-medium cursor-pointer hover:bg-black/85 transition"
+            style={{ zIndex: 100 }}
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+          >
+            ↓ Stáhnout
+          </a>
 
           <button
             type="button"
